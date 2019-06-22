@@ -45,3 +45,19 @@ module "ssm-instance" {
   source = "../tf-modules/ssm-instance"
   vpc_id = module.vpc.vpc_id
 }
+
+module "eks-master" {
+  source = "../tf-modules/eks-master"
+  vpc_id = module.vpc.vpc_id
+}
+
+module "eks-workers" {
+  source       = "../tf-modules/eks-workers"
+  vpc_id       = module.vpc.vpc_id
+  worker_sg_id = module.eks-master.worker_sg_id
+}
+
+module "eks-config" {
+  source          = "../tf-modules/eks-config"
+  worker_role_arn = module.eks-workers.worker_role_arn
+}
