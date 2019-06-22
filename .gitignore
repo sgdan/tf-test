@@ -1,0 +1,6 @@
+.terraform*
+terraform.*
+.build
+plan.bin
+.vscode
+remote.tf

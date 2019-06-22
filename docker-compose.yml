@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+
+  # Map the parent folder so that we can also access module repo
+  # for local test e.g. via ../tf-modules
+  terraform:
+    image: hashicorp/terraform:0.12.2
+    volumes:
+    - ..:/working
+    - ~/.aws:/root/.aws
+    working_dir: /working/tf-test
