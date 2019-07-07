@@ -12,6 +12,9 @@ plan:
 apply:
 	$(TF) apply "plan.bin"
 
+console:
+	$(TF) console
+
 clean:
 	rm plan.bin
 
