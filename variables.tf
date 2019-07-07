@@ -17,3 +17,8 @@ variable "certificate_arn" {
   description = "ARN of certificate to use on ALB"
   default     = "arn:aws:acm:us-east-1:xxxxxxxxxxxx:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 }
+
+variable "concourse_db_password" {
+  description = "Initial password for Concourse database"
+  default     = "password"
+}

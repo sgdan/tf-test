@@ -1,6 +1,6 @@
 provider "aws" {
   region  = var.region
-  version = "~> 2.16"
+  version = "~> 2.18"
 }
 provider "random" { version = "~> 2.1" }
 
@@ -43,7 +43,26 @@ module "ecs" {
 # }
 
 module "ecs-nexus" {
-  source = "github.com/sgdan/tf-modules//ecs-nexus?ref=0.3.0"
+  source = "../tf-modules/ecs-nexus"
   vpc_id = module.simple-vpc.vpc_id
   domain = var.domain
 }
+
+module "concourse-db" {
+  source             = "../tf-modules/concourse-db"
+  password           = var.concourse_db_password
+  vpc_id             = module.simple-vpc.vpc_id
+  private_subnet_ids = module.simple-vpc.private_subnet_ids
+}
+
+module "concourse-web" {
+  source     = "../tf-modules/concourse-web"
+  vpc_id     = module.simple-vpc.vpc_id
+  domain     = var.domain
+  db_address = module.concourse-db.db_address
+  db_pass    = var.concourse_db_password
+}
+
+# module "concourse-worker" {
+#   source = "../tf-modules/concourse-worker"
+# }
