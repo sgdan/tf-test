@@ -17,3 +17,8 @@ variable "certificate_arn" {
   description = "ARN of certificate to use on ALB"
   default     = "arn:aws:acm:us-east-1:xxxxxxxxxxxx:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 }
+
+variable "desktop_public_key" {
+  description = "Public key used to connect via SSH to desktop instance"
+  default = "ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX== desktop-rsa-key"
+}
