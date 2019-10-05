@@ -49,10 +49,25 @@ module "simple-vpc" {
 # }
 
 # Ubuntu linux desktop accessible from windows using RDP over SSH tunnel
-module "desktop" {
-  source     = "github.com/sgdan/tf-modules//desktop?ref=0.4.0"
-  vpc_id     = module.simple-vpc.vpc_id
-  subnet_id  = module.simple-vpc.public_subnet_ids[0]
-  public_key = var.desktop_public_key
-  domain     = var.domain
+# module "desktop" {
+#   source     = "github.com/sgdan/tf-modules//desktop?ref=0.4.0"
+#   vpc_id     = module.simple-vpc.vpc_id
+#   subnet_id  = module.simple-vpc.public_subnet_ids[0]
+#   public_key = var.desktop_public_key
+#   domain     = var.domain
+# }
+
+module "fargate" {
+  source = "../tf-modules/fargate"
+  vpc_id = module.simple-vpc.vpc_id
+}
+output "fargate" {
+  # Generate CLI command to run the task
+  value = <<EOT
+  aws ecs run-task \
+    --task-definition test-task \
+    --cluster test-cluster \
+    --launch-type FARGATE \
+    --network-configuration "awsvpcConfiguration={subnets=[${module.simple-vpc.private_subnet_ids[0]}],securityGroups=[${module.fargate.security_group}]}"
+  EOT
 }

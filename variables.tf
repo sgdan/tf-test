@@ -20,5 +20,5 @@ variable "certificate_arn" {
 
 variable "desktop_public_key" {
   description = "Public key used to connect via SSH to desktop instance"
-  default = "ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX== desktop-rsa-key"
+  default     = "ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX== desktop-rsa-key"
 }
