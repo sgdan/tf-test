@@ -69,3 +69,40 @@ altogether (i.e. 4 will remain unused for the moment). Each of the 8 subnets wil
 | Unused    | 192.168.160.0/19 | 8192          |
 | Unused    | 192.168.192.0/19 | 8192          |
 | Unused    | 192.168.224.0/19 | 8192          |
+
+# Testing Rancher 2 install on EKS
+
+Note: This is not Rancher's recommended install process, they
+say it should only be installed on an RKE cluster
+
+- https://rancher.com/docs/rancher/v2.x/en/installation/k8s-install/helm-rancher/
+- https://cert-manager.io/docs/installation/kubernetes/
+
+```bash
+# install cert-manager
+kubectl create namespace cert-manager
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.13.0/cert-manager.yaml
+
+# verify installation (3 pods running)
+kubectl get pods --namespace cert-manager
+
+# install rancher
+kubectl create namespace cattle-system
+helm install rancher rancher-latest/rancher -n cattle-system \
+  --set hostname=rancher.my.org \
+  --set tls=external
+
+# wait for Rancher to roll out
+kubectl -n cattle-system rollout status deploy/rancher
+
+# had to edit local cluster and save to avoid "server-url" error
+
+# Install ingress, see https://kubernetes.github.io/ingress-nginx/deploy/#using-helm
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+kubectl create namespace nginx-ingress
+helm install nginx-ingress stable/nginx-ingress -n nginx-ingress \
+  --set rbac.create=true \
+  --set controller.hostNetwork=true \
+  --set controller.kind=DaemonSet
+
+```
